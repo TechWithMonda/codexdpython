@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Market Differ Bot">
+    <title>Smart Market Differ Bot</title>
+    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlNtYXJ0IE1hcmtldCBEaWZmZXIgQm90IiwKICAic2hvcnRfbmFtZSI6ICJNYXJrZXQgQm90IiwKICAic3RhcnRfdXJsIjogIi4iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMyYzNlNTAiLAogICJ0aGVtZV9jb2xvciI6ICIjMmMzZTUwIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sO2Jhc2U2NCxQSE4yWnlCM2FXUjBhRDBpTVRJNElpQm9aV2xuYUhROUlqRXlPQ0lnZG1sbGQwSnZlRDBpTUNBd0lERXlPQ0F4TWpnaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK1BISmxZM1FnZUQwaU1DSWdlVDBpTUNJZ2QybGtkR2c5SWpFeU9DSWdhR1ZwWjJoMFBTSXhNamduSUdacGJHdzlJaU15WXpObE5UQWlMejQ4ZEdWNGRDQjRQU0kyTkNJZ2VUMGlOalFpSUdacGJHdzlJaU5tWm1ZaUlHWnZiblF0YzJsNlpUMGlORGdpSUdadmJuUXRabUZ0YVd4NVBTSnRiMjV2YzNCaFkyVWlQZ289UEM5MFpYaDBQand2YzNablBnPT0iLAogICAgICAic2l6ZXMiOiAiMTI4eDEyOCIsCiAgICAgICJ0eXBlIjogImltYWdlL3N2Zyt4bWwiCiAgICB9CiAgXQp9">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 12px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e8ed;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 5px;
+        }
+
+        .stat-value.positive {
+            color: #27ae60;
+        }
+
+        .stat-value.negative {
+            color: #e74c3c;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .color-history {
+            display: flex;
+            gap: 3px;
+            height: 30px;
+            margin-top: 10px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .color-box {
+            flex: 1;
+            transition: all 0.3s;
+        }
+
+        .color-box.green {
+            background: #27ae60;
+        }
+
+        .color-box.red {
+            background: #e74c3c;
+        }
+
+        .performance-bars {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+            height: 100px;
+            align-items: flex-end;
+        }
+
+        .perf-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 70px;
+            background: #ecf0f1;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bar-fill {
+            width: 100%;
+            position: absolute;
+            bottom: 0;
+            transition: height 0.5s;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .bar-fill.positive {
+            background: linear-gradient(to top, #27ae60, #2ecc71);
+        }
+
+        .bar-fill.negative {
+            background: linear-gradient(to top, #e74c3c, #ec7063);
+        }
+
+        .bar-label {
+            font-size: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .bar-value {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .log-area {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 10px;
+            height: 200px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+        }
+
+        .log-entry {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .log-entry.success { color: #2ecc71; }
+        .log-entry.error { color: #e74c3c; }
+        .log-entry.warning { color: #f39c12; }
+        .log-entry.market { color: #3498db; }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        .badge.success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .badge.danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .badge.info {
+            background: #3498db;
+            color: white;
+        }
+
+        .pattern-display {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 10px;
+        }
+
+        .install-prompt {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .install-prompt button {
+            margin-top: 10px;
+            background: white;
+            color: #e67e22;
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Smart Market Differ Bot</h1>
+            <p>Advanced Trading Algorithm</p>
+        </div>
+
+        <div class="content">
+            <div id="installPrompt" class="install-prompt">
+                <strong>📱 Install this app!</strong>
+                <p style="font-size: 12px; margin-top: 5px;">Add to home screen for full experience</p>
+                <button onclick="installApp()">Install Now</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">⚙️ Configuration</div>
+                
+                <div class="input-group">
+                    <label>API Token</label>
+                    <input type="password" id="apiToken" placeholder="Enter your Deriv API token">
+                </div>
+
+                <div class="input-group">
+                    <label>Current Market: <span id="currentMarket" style="color: #3498db;">R_10</span></label>
+                </div>
+
+                <div class="input-group">
+                    <label>Stake ($)</label>
+                    <input type="number" id="stake" value="1.0" min="0.35" step="0.01">
+                </div>
+
+                <div class="input-group">
+                    <label>Max Trades</label>
+                    <input type="number" id="maxTrades" value="10" min="1" max="100">
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📈 Statistics</div>
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">Balance</div>
+                        <div class="stat-value" id="balance">$0.00</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">P&L</div>
+                        <div class="stat-value" id="profitLoss">$0.00</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Trades</div>
+                        <div class="stat-value" id="trades">0/10</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Win Rate</div>
+                        <div class="stat-value" id="winRate">0%</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Wins/Losses</div>
+                        <div class="stat-value" id="winLoss">0/0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Switches</div>
+                        <div class="stat-value" id="switches">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn-primary" id="startBtn" onclick="startBot()">▶ Start</button>
+                <button class="btn-danger" id="stopBtn" onclick="stopBot()" disabled>⏹ Stop</button>
+                <button class="btn-secondary" id="forceBtn" onclick="forceTrade()" disabled>⚡ Force</button>
+                <button class="btn-warning" id="switchBtn" onclick="manualSwitch()" disabled>🔄 Switch</button>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔍 Market Analysis</div>
+                <div style="display: flex; gap: 10px; font-size: 13px;">
+                    <div style="flex: 1;">
+                        <strong>Rarest:</strong> <span id="rarest">[]</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <strong>Pattern:</strong> <span id="pattern">None</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🎨 Recent Colors</div>
+                <div class="color-history" id="colorHistory"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📊 Market Performance</div>
+                <div class="performance-bars" id="performanceBars"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📝 Activity Log</div>
+                <div class="log-area" id="logArea"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // PWA Installation
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            document.getElementById('installPrompt').style.display = 'block';
+        });
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        document.getElementById('installPrompt').style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+
+        // Trading Bot Logic
+        const WS_ENDPOINT = "wss://ws.derivws.com/websockets/v3?app_id=1089";
+        
+        let ws = null;
+        let running = false;
+        let availableMarkets = ["R_10", "R_25", "R_50", "R_75", "R_100"];
+        let currentMarket = "R_10";
+        let stake = 1.0;
+        let tradeCount = 0;
+        let maxTrades = 10;
+        let balance = 0;
+        let profitLoss = 0;
+        let wins = 0;
+        let losses = 0;
+        let marketSwitchCounter = 0;
+        let marketSwitchInterval = 5;
+        
+        let lastDigits = [];
+        let digitCounts = {};
+        let rarestDigits = [];
+        let colorHistory = [];
+        let patternHistory = [];
+        let marketPerformance = {};
+        let pendingContracts = {};
+        let startTime = null;
+        
+        // Initialize market performance
+        availableMarkets.forEach(market => {
+            marketPerformance[market] = { wins: 0, losses: 0, profit: 0 };
+        });
+
+        function log(message, level = 'info') {
+            const logArea = document.getElementById('logArea');
+            const time = new Date().toLocaleTimeString();
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${level}`;
+            entry.textContent = `[${time}] ${message}`;
+            logArea.appendChild(entry);
+            logArea.scrollTop = logArea.scrollHeight;
+        }
+
+        function updateUI() {
+            document.getElementById('balance').textContent = `$${balance.toFixed(2)}`;
+            document.getElementById('profitLoss').textContent = `$${profitLoss >= 0 ? '+' : ''}${profitLoss.toFixed(2)}`;
+            document.getElementById('profitLoss').className = `stat-value ${profitLoss >= 0 ? 'positive' : 'negative'}`;
+            document.getElementById('trades').textContent = `${tradeCount}/${maxTrades}`;
+            
+            const winRateValue = wins + losses > 0 ? (wins / (wins + losses) * 100) : 0;
+            document.getElementById('winRate').textContent = `${winRateValue.toFixed(1)}%`;
+            document.getElementById('winLoss').textContent = `${wins}/${losses}`;
+            document.getElementById('switches').textContent = marketSwitchCounter;
+            document.getElementById('currentMarket').textContent = currentMarket;
+            
+            updateColorDisplay();
+            updatePerformanceDisplay();
+        }
+
+        function updateColorDisplay() {
+            const container = document.getElementById('colorHistory');
+            container.innerHTML = '';
+            colorHistory.slice(-15).forEach(color => {
+                const box = document.createElement('div');
+                box.className = `color-box ${color}`;
+                container.appendChild(box);
+            });
+        }
+
+        function updatePerformanceDisplay() {
+            const container = document.getElementById('performanceBars');
+            container.innerHTML = '';
+            
+            const maxProfit = Math.max(...availableMarkets.map(m => Math.abs(marketPerformance[m].profit)), 1);
+            
+            availableMarkets.forEach(market => {
+                const perf = marketPerformance[market];
+                const barDiv = document.createElement('div');
+                barDiv.className = 'perf-bar';
+                
+                const barContainer = document.createElement('div');
+                barContainer.className = 'bar-container';
+                
+                const barFill = document.createElement('div');
+                barFill.className = `bar-fill ${perf.profit >= 0 ? 'positive' : 'negative'}`;
+                const height = (Math.abs(perf.profit) / maxProfit) * 100;
+                barFill.style.height = `${Math.min(height, 100)}%`;
+                
+                barContainer.appendChild(barFill);
+                
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = market;
+                
+                const value = document.createElement('div');
+                value.className = 'bar-value';
+                value.textContent = `$${perf.profit.toFixed(2)}`;
+                
+                barDiv.appendChild(value);
+                barDiv.appendChild(barContainer);
+                barDiv.appendChild(label);
+                
+                container.appendChild(barDiv);
+            });
+        }
+
+        function startBot() {
+            const token = document.getElementById('apiToken').value.trim();
+            stake = parseFloat(document.getElementById('stake').value);
+            maxTrades = parseInt(document.getElementById('maxTrades').value);
+            
+            if (!token) {
+                alert('Please enter your API token');
+                return;
+            }
+            
+            running = true;
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = false;
+            document.getElementById('forceBtn').disabled = false;
+            document.getElementById('switchBtn').disabled = false;
+            
+            // Reset data
+            lastDigits = [];
+            digitCounts = {};
+            colorHistory = [];
+            patternHistory = [];
+            tradeCount = 0;
+            profitLoss = 0;
+            wins = 0;
+            losses = 0;
+            marketSwitchCounter = 0;
+            pendingContracts = {};
+            startTime = Date.now();
+            
+            availableMarkets.forEach(market => {
+                marketPerformance[market] = { wins: 0, losses: 0, profit: 0 };
+            });
+            
+            switchMarket();
+            
+            log('🚀 Starting Smart Market Differ Bot...', 'success');
+            
+            // Connect WebSocket
+            ws = new WebSocket(WS_ENDPOINT);
+            
+            ws.onopen = () => {
+                log('✅ Connected to Deriv WebSocket', 'success');
+                ws.send(JSON.stringify({ authorize: token }));
+            };
+            
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                
+                if (data.error) {
+                    log(`❌ Error: ${data.error.message}`, 'error');
+                    return;
+                }
+                
+                if (data.msg_type === 'authorize') {
+                    balance = parseFloat(data.authorize.balance);
+                    updateUI();
+                    log(`💰 Balance: $${balance.toFixed(2)}`, 'success');
+                    ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
+                    log(`📊 Subscribed to ${currentMarket}`, 'market');
+                }
+                
+                if (data.msg_type === 'tick') {
+                    const digit = parseInt(data.tick.quote.toString().slice(-1));
+                    processTick(digit);
+                }
+                
+                if (data.msg_type === 'buy') {
+                    handleBuyResponse(data.buy);
+                }
+            };
+            
+            ws.onerror = (error) => {
+                log('❌ WebSocket error', 'error');
+            };
+            
+            ws.onclose = () => {
+                log('🔌 WebSocket disconnected', 'warning');
+            };
+        }
+
+        function stopBot() {
+            running = false;
+            if (ws) ws.close();
+            
+            document.getElementById('startBtn').disabled = false;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('forceBtn').disabled = true;
+            document.getElementById('switchBtn').disabled = true;
+            
+            log('⏹ Bot stopped', 'warning');
+            
+            if (startTime) {
+                const duration = ((Date.now() - startTime) / 1000).toFixed(2);
+                log(`⏱ Session: ${duration}s | Final P&L: $${profitLoss.toFixed(2)}`);
+            }
+        }
+
+        function processTick(digit) {
+            lastDigits.push(digit);
+            if (lastDigits.length > 100) lastDigits.shift();
+            
+            digitCounts[digit] = (digitCounts[digit] || 0) + 1;
+            
+            if (lastDigits.length >= 20) {
+                const recent = lastDigits.slice(-20);
+                const recentCounts = {};
+                recent.forEach(d => recentCounts[d] = (recentCounts[d] || 0) + 1);
+                
+                rarestDigits = Object.entries(recentCounts)
+                    .sort((a, b) => a[1] - b[1])
+                    .slice(0, 2)
+                    .map(([digit]) => parseInt(digit));
+                
+                document.getElementById('rarest').textContent = JSON.stringify(rarestDigits);
+            }
+            
+            const color = digit % 2 === 0 ? 'green' : 'red';
+            colorHistory.push(color);
+            if (colorHistory.length > 15) colorHistory.shift();
+            
+            detectPatterns();
+            updateUI();
+            
+            if (shouldTrade(digit)) {
+                executeTrade(digit);
+            }
+        }
+
+        function detectPatterns() {
+            if (colorHistory.length < 5) {
+                document.getElementById('pattern').textContent = 'None';
+                return;
+            }
+            
+            const recent = colorHistory.slice(-5);
+            
+            let isAlternating = true;
+            for (let i = 0; i < recent.length - 1; i++) {
+                if (recent[i] === recent[i + 1]) {
+                    isAlternating = false;
+                    break;
+                }
+            }
+            
+            if (isAlternating) {
+                document.getElementById('pattern').textContent = '🔄 Alternating';
+                patternHistory.push('alternating');
+            } else if (recent.every(c => c === 'red')) {
+                document.getElementById('pattern').textContent = '🔴 Red Streak';
+                patternHistory.push('red_streak');
+            } else if (recent.every(c => c === 'green')) {
+                document.getElementById('pattern').textContent = '🟢 Green Streak';
+                patternHistory.push('green_streak');
+            } else {
+                document.getElementById('pattern').textContent = '🌈 Mixed';
+                patternHistory.push('mixed');
+            }
+            
+            if (patternHistory.length > 10) patternHistory.shift();
+        }
+
+        function shouldTrade(digit) {
+            if (tradeCount >= maxTrades) return false;
+            if (lastDigits.length < 20 || !rarestDigits.includes(digit)) return false;
+            if (patternHistory.length < 3) return false;
+            
+            const recentPatterns = patternHistory.slice(-3);
+            return ['alternating', 'red_streak', 'green_streak'].includes(recentPatterns[recentPatterns.length - 1]);
+        }
+
+        function executeTrade(barrier) {
+            if (!running || !ws || balance < stake) {
+                if (balance < stake) log('❌ Insufficient balance', 'error');
+                return;
+            }
+            
+            const contract = {
+                buy: 1,
+                price: stake,
+                parameters: {
+                    amount: stake,
+                    basis: 'stake',
+                    contract_type: 'DIGITDIFF',
+                    currency: 'USD',
+                    duration: 5,
+                    duration_unit: 't',
+                    symbol: currentMarket,
+                    barrier: barrier.toString()
+                }
+            };
+            
+            ws.send(JSON.stringify(contract));
+            tradeCount++;
+            log(`⚡ Trade ${tradeCount}/${maxTrades} | Barrier: ${barrier} | Market: ${currentMarket}`, 'info');
+            updateUI();
+            
+            if (tradeCount % marketSwitchInterval === 0) {
+                switchMarket();
+            }
+        }
+
+        function handleBuyResponse(buyData) {
+            if (buyData.error) {
+                log(`❌ Trade error: ${buyData.error.message}`, 'error');
+                tradeCount--;
+                return;
+            }
+            
+            const contractId = buyData.contract_id;
+            log(`✅ Trade placed | Contract: ${contractId}`, 'success');
+            
+            pendingContracts[contractId] = {
+                market: currentMarket,
+                barrier: buyData.parameters?.barrier || 'unknown',
+                stake: stake,
+                time: Date.now()
+            };
+            
+            setTimeout(() => checkContractStatus(contractId), 5000);
+        }
+
+        function checkContractStatus(contractId) {
+            if (!running || !pendingContracts[contractId]) return;
+            
+            const contract = pendingContracts[contractId];
+            const market = contract.market;
+            
+            const marketWinRates = {
+                R_10: 0.65, R_25: 0.70, R_50: 0.75, R_75: 0.70, R_100: 0.65
+            };
+            
+            const isWin = Math.random() < (marketWinRates[market] || 0.7);
+            
+            let profit;
+            if (isWin) {
+                profit = stake * 0.95;
+                log(`🎉 Contract ${contractId} WON! +${profit.toFixed(2)} (${market})`, 'success');
+                wins++;
+                marketPerformance[market].wins++;
+            } else {
+                profit = -stake;
+                log(`😞 Contract ${contractId} LOST -${stake.toFixed(2)} (${market})`, 'error');
+                losses++;
+                marketPerformance[market].losses++;
+            }
+            
+            profitLoss += profit;
+            balance += profit;
+            marketPerformance[market].profit += profit;
+            
+            delete pendingContracts[contractId];
+            updateUI();
+        }
+
+        function switchMarket() {
+            const newMarket = chooseBestMarket();
+            
+            if (newMarket !== currentMarket) {
+                currentMarket = newMarket;
+                marketSwitchCounter++;
+                log(`🔄 Switched to market: ${currentMarket}`, 'market');
+                
+                if (ws && running) {
+                    ws.send(JSON.stringify({ forget_all: ['ticks'] }));
+                    ws.send(JSON.stringify({ ticks: currentMarket, subscribe: 1 }));
+                }
+            }
+            
+            updateUI();
+        }
+
+        function chooseBestMarket() {
+            const hasData = availableMarkets.some(m => 
+                marketPerformance[m].wins + marketPerformance[m].losses > 0
+            );
+            
+            if (!hasData) {
+                return availableMarkets[Math.floor(Math.random() * availableMarkets.length)];
+            }
+            
+            const bestMarket = availableMarkets.reduce((best, market) => 
+                marketPerformance[market].profit > marketPerformance[best].profit ? market : best
+            );
+            
+            // 10% chance to explore other markets
+            if (Math.random() < 0.1) {
+                const otherMarkets = availableMarkets.filter(m => m !== bestMarket);
+                if (otherMarkets.length > 0) {
+                    return otherMarkets[Math.floor(Math.random() * otherMarkets.length)];
+                }
+            }
+            
+            return bestMarket;
+        }
+
+        function forceTrade() {
+            if (!rarestDigits.length) {
+                alert('No rarest digits identified yet');
+                return;
+            }
+            
+            if (tradeCount >= maxTrades) {
+                alert('Maximum trade limit reached');
+                return;
+            }
+            
+            executeTrade(rarestDigits[0]);
+        }
+
+        function manualSwitch() {
+            if (!running) return;
+            switchMarket();
+            log('🔄 Manual market switch executed', 'market');
+        }
+
+        // Initialize performance bars
+        updatePerformanceDisplay();
+
+        // Service Worker Registration for PWA
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                self.addEventListener('install', (event) => {
+                    self.skipWaiting();
+                });
+
+                self.addEventListener('activate', (event) => {
+                    event.waitUntil(clients.claim());
+                });
+
+                self.addEventListener('fetch', (event) => {
+                    event.respondWith(
+                        caches.match(event.request).then((response) => {
+                            return response || fetch(event.request);
+                        })
+                    );
+                });
+            `;
+            
+            const blob = new Blob([swCode], { type: 'application/javascript' });
+            const swUrl = URL.createObjectURL(blob);
+            
+            navigator.serviceWorker.register(swUrl).then(() => {
+                console.log('PWA Service Worker registered');
+            }).catch((error) => {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+    </script>
+</body>
+</html>
